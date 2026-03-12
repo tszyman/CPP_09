@@ -6,11 +6,11 @@
 #    By: tszymans <tszymans@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/10 19:27:57 by tszymans          #+#    #+#              #
-#    Updated: 2026/03/12 20:24:07 by tszymans         ###   ########.fr        #
+#    Updated: 2026/03/12 21:39:41 by tszymans         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME    = BitcoinExchange
+NAME    = btc
 
 CC      = c++
 CFLAGS  = -Wall -Wextra -Werror -std=c++98
