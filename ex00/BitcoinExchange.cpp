@@ -88,6 +88,12 @@ void BitcoinExchange::loadDatabase(const std::string &dbPath) {
 }
 
 void processInput(const std::string &inputPath){
+	// Loading input file
+	std::ifstream file(inputPath.c_str());
+	if(!file.is_open()) {
+		std::cerr << "Error: could not open input file." << std::endl;
+	}
+	
 // 1. getDate: get the date from data
 // 2. splitDate: YYYY-MM-DD -> int year, int month, int day
 // 3. validate: year: int > 0; month: int 0 < month <= 12; day: 0 < day < 31
