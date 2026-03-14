@@ -35,7 +35,7 @@ static int isLeapYear(int year){
 }
 
 static int getMaxDays(int month, int year){
-
+	return 0;
 }
 
 
