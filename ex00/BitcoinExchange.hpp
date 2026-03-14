@@ -20,9 +20,13 @@
 class BitcoinExchange {
 	private:
 		std::map<std::string, float> _data;  // Database container
+		// helper functions
+		bool isLeapYear(int year) const;
+		bool isValidDate(const std::string& date) const;
+
 
 	public:
-		//OCF
+		// OCF
 		BitcoinExchange();
 		BitcoinExchange(const BitcoinExchange& src);
 		BitcoinExchange& operator=(const BitcoinExchange& rhs);

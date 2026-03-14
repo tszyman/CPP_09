@@ -30,15 +30,41 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange& rhs) {
 // 4. Destructor
 BitcoinExchange::~BitcoinExchange() {}
 
-static int isLeapYear(int year){
-	return 0;
+bool BitcoinExchange::isLeapYear(int year) const {
+	return (year % 4 == 0 && year % 100 != 0) || (year % 400);
 }
 
-static int getMaxDays(int month, int year){
-	return 0;
+bool BitcoinExchange::isValidDate(const std::string& date) const {
+	// Check if the date is properly formatted
+	// if (date.length() != 10 || date[4] != '-' || date[7] != '-')
+	// 	return false;
+	
+	// More general approach to splitting but probably not required since dates are YYYY-MM-DD and we assume that year > 999
+		size_t firstHyphen = date.find('-');
+		size_t secondHyphen = date.find('-', firstHyphen + 1);
+
+		// We extract substrings and convert to int using atoi
+		int year = std::atoi(date.substr(0, firstHyphen).c_str());
+		int month = std::atoi(date.substr(firstHyphen + 1, secondHyphen - firstHyphen - 1).c_str());
+		int day = std::atoi(date.substr(secondHyphen + 1).c_str());
+	//
+	
+	// // Split and convert using atoi
+	// int year = std::atoi(date.substr(0,4).c_str()); // extract year
+	// int month = std::atoi(date.substr(5,2).c_str()); // extract month
+	// int day = std::atoi(date.substr(8,2).c_str()); // extract day
+
+	// Validation of individual values
+	if (year < 0 || month < 1 || month > 12 || day < 0 || day > 31)
+		return false;
+	
+	// Calculation of days in specific month:
+	int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	if (isLeapYear(year))
+		daysInMonth[1] = 29;
+
+	return (day <= daysInMonth[month - 1]);
 }
-
-
 
 void BitcoinExchange::loadDatabase(const std::string &dbPath) {
 	std::ifstream file(dbPath.c_str());
