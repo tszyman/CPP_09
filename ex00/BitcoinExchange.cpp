@@ -12,6 +12,7 @@
 
 #include "BitcoinExchange.hpp"
 #include <fstream>
+#include <cstdlib>
 
 // 1. Default constructor
 BitcoinExchange::BitcoinExchange() {}
@@ -84,19 +85,44 @@ void BitcoinExchange::loadDatabase(const std::string &dbPath) {
 			_data[date] = rate;												//store in db
 		}
 	}
+	// TESTS
+	std::cout << "Database loaded with " << _data.size() << " entries." << std::endl;
+
 	file.close();
 }
 
-void processInput(const std::string &inputPath){
+void BitcoinExchange::processInput(const std::string &inputPath){
 	// Loading input file
 	std::ifstream file(inputPath.c_str());
 	if(!file.is_open()) {
 		std::cerr << "Error: could not open input file." << std::endl;
 	}
-	
-// 1. getDate: get the date from data
-// 2. splitDate: YYYY-MM-DD -> int year, int month, int day
-// 3. validate: year: int > 0; month: int 0 < month <= 12; day: 0 < day < 31
-// 4. leapYear: check if year is leap: divisable by 4 and if divisable by 100 adn divisable by 400 (2000 = leap, but 1900 not leap)
-// 5. dayValidation: if day/month is valid for the year.
+	std::string line;
+	std::getline(file, line);
+
+	while(std::getline(file, line)){
+		size_t pipePos = line.find('|');
+		if (pipePos == std::string::npos){
+			std::cerr << "Error: bad input => " << line << std::endl;
+		}
+
+		std::string date = line.substr(0, pipePos - 1);
+		if (!isValidDate(date)) {
+			std::cerr << "Error: bad input => " << date << std::endl;
+			continue;
+		}
+		
+		//std::string valueStr = line.substr(commaPos + 1);
+		//	float value = static_cast<float>(std::atof(valueStr.c_str()));
+
+		// 1. getDate: get the date from data
+		// 2. splitDate: YYYY-MM-DD -> int year, int month, int day
+		// 3. validate: year: int > 0; month: int 0 < month <= 12; day: 0 < day < 31
+		// 4. leapYear: check if year is leap: divisable by 4 and if divisable by 100 adn divisable by 400 (2000 = leap, but 1900 not leap)
+		// 5. dayValidation: if day/month is valid for the year.
+
+		// TEST: 
+		std::cout << "Valid date: " << date << std::endl;
+
+	}
 }
