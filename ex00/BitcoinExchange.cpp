@@ -48,16 +48,6 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 			return false;
 	}
 
-	/* More general approach to splitting but probably not required since dates are YYYY-MM-DD and we assume that year > 999
-		size_t firstHyphen = date.find('-');
-		size_t secondHyphen = date.find('-', firstHyphen + 1);
-
-		// We extract substrings and convert to int using atoi
-		int year = std::atoi(date.substr(0, firstHyphen).c_str());
-		int month = std::atoi(date.substr(firstHyphen + 1, secondHyphen - firstHyphen - 1).c_str());
-		int day = std::atoi(date.substr(secondHyphen + 1).c_str());
-	*/
-	
 	// Split and convert using atoi
 	int year = std::atoi(date.substr(0,4).c_str()); // extract year
 	int month = std::atoi(date.substr(5,2).c_str()); // extract month
@@ -73,6 +63,35 @@ bool BitcoinExchange::isValidDate(const std::string& date) const {
 		daysInMonth[1] = 29;
 
 	return (day <= daysInMonth[month - 1]);
+}
+
+float BitcoinExchange::validateValue(const std::string& valueStr) const {
+	/** 
+	 * Returns the float value if valid.
+	 * Returns -1.0 if not a positive number.
+	 * Returns -2.0 if too large.
+	 * Returns -3.0 for "bad input" (garbage, etc.)
+	 * Returns -4.0 for "bad input" (when empty)
+	 */
+	// 1. Check for empty string or only whiltespace
+	if (valueStr.empty() || valueStr.find_first_not_of(" \t\r\n") == std::string::npos){
+		//std::cerr << "Error: bad input => " << line << std::endl;
+		return -4.0f; // bad input
+	}
+	char* endptr;
+	double val_tmp = std::strtod(valueStr.c_str(), &endptr);
+	// we need to check what follows the value, if spaces - need to go to the end
+	while (std::isspace(*endptr))
+		endptr++;
+	if (*endptr != '\0')
+		return -3.0f;
+	
+	if (val_tmp < 0)
+		return -1.0f;
+	if (val_tmp > 1000)
+		return -2.0f;
+
+	return static_cast<float>(val_tmp);
 }
 
 void BitcoinExchange::calculateValue(const std::string& date, float value) {
@@ -108,9 +127,6 @@ void BitcoinExchange::loadDatabase(const std::string &dbPath) {
 			_data[date] = rate;												//store in db
 		}
 	}
-	// TESTS
-	std::cout << "Database loaded with " << _data.size() << " entries." << std::endl;
-
 	file.close();
 }
 
@@ -134,30 +150,27 @@ void BitcoinExchange::processInput(const std::string &inputPath){
 
 		std::string date = line.substr(0, pipePos - 1);
 		std::string valueStr = line.substr(pipePos + 1);
-		
+
+		// date validation
 		if (!isValidDate(date)) {
 			std::cerr << "Error: bad input => " << date << std::endl;
 			continue;
 		}
 
-		/* Check if needed, not sure if required
-			char* endptr;
-			float value = std::strtof(valueStr.c_str(), &endptr);
-		*/
-		float value = static_cast<float>(std::atof(valueStr.c_str()));
-		// Range check: 0 < value < 1000
-		if (value < 0) {
+		// value validation
+		float value = validateValue(valueStr);
+
+		if (value == -1.0f) {
 			std::cerr << "Error: not a positive number." << std::endl;
-		} else if (value > 1000) {
+		} else if (value == -2.0) {
 			std::cerr << "Error: too large a number." << std::endl;
+		} else if (value == -3.0f) {
+			std::cerr << "Error: bad input => " << valueStr << std::endl;
+		} else if (value == -4.0f) {
+			std::cerr << "Error: bad input => " << line << std::endl;
 		} else {
+			// final calculations
 			this->calculateValue(date, value);
 		}
-
-		// TESTS 
-		// std::cout << "Valid date: " << date << std::endl;
-		// std::cout << "Valid value: " << value << std::endl;
-
-
 	}
 }

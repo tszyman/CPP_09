@@ -23,6 +23,7 @@ class BitcoinExchange {
 		// helper functions
 		bool isLeapYear(int year) const;
 		bool isValidDate(const std::string& date) const;
+		float validateValue(const std::string& valueStr) const;
 		void calculateValue(const std::string& date, float value);
 
 	public:
