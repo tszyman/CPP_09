@@ -32,7 +32,7 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange& rhs) {
 BitcoinExchange::~BitcoinExchange() {}
 
 bool BitcoinExchange::isLeapYear(int year) const {
-	return (year % 4 == 0 && year % 100 != 0) || (year % 400);
+	return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
 bool BitcoinExchange::isValidDate(const std::string& date) const {
