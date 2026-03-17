@@ -13,4 +13,18 @@
 #ifndef RPN_HPP
 #define RPN_HPP
 
+#include <iostream>
+#include <stack>
+#include <string>
+
+class RPN {
+	public:
+		RPN();
+		RPN(const RPN& src);
+		RPN& operator=(const RPN& rhs);
+		~RPN();
+
+		static void evaluate(std::string expression);
+};
+
 #endif
