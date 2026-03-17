@@ -24,7 +24,7 @@ class RPN {
 		RPN& operator=(const RPN& rhs);
 		~RPN();
 
-		static void evaluate(std::string expression);
+		static void evaluate(std::string expr);
 };
 
 #endif
