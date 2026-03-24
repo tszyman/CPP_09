@@ -30,8 +30,21 @@ PmergeMe::~PmergeMe(){} //Clean up resources. Since STL containers handle their 
 
 void PmergeMe::printSeqV(const std::string& prefix, const std::vector<int>& v){
 	std::cout << prefix;
-	for (size_t i = 0; i < v.size(); ++i){
-		std::cout << v[i] << (i == v.size() - 1 ? "" : " ");
+	if (v.size() <= 10){
+		for (size_t i = 0; i < v.size(); ++i){
+			std::cout << v[i] << (i == v.size() - 1 ? "" : " ");
+		}
+	}
+	else {
+		// Print first 5 elements
+		for (int i = 0; i < 5; ++i){
+			std::cout << v[i] << " ";
+		}
+		std::cout << "[...] ";
+		// Print last 5 elements
+		for (size_t i = v.size() - 5; i < v.size(); ++i){
+			std::cout << v[i] << (i == v.size() - 1 ? "" : " ");
+		}
 	}
 	std::cout << std::endl;
 }
@@ -40,8 +53,21 @@ void PmergeMe::printSeqD(const std::string& prefix, const std::deque<int>& d){
 	std::cout << prefix;
 	// deque needs an iterator to iterate through elements
 	std::deque<int>::const_iterator it;
-	for (it = d.begin(); it != d.end(); ++it){
-		std::cout << *it << (it + 1 == d.end() ? "" : " ");
+	if (d.size() <= 10){
+		for (it = d.begin(); it != d.end(); ++it){
+			std::cout << *it << (it + 1 == d.end() ? "" : " ");
+		}
+	}
+	else {
+		it = d.begin();
+		for (int i = 0; i < 5; ++i, ++it){
+			std::cout << *it << " ";
+		}
+		std::cout << "[...] ";
+		it = d.end() - 5;
+		for (;it != d.end(); ++it){
+			std::cout << *it << (it + 1 == d.end() ? "" : " ");
+		}
 	}
 	std::cout << std::endl;
 }
@@ -81,7 +107,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& container){
 		return;
 	
 	// 1. Pairing
-	std::vector<std::pair<int, int>> pairs;
+	std::vector<std::pair<int, int> > pairs;
 	int leftover = -1;
 	bool hasLeftover = false;
 
@@ -142,10 +168,10 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& container){
 		return;
 	
 	// 1. Pairing
-	std::deque<std::pair<int, int>> pairs;
+	std::deque<std::pair<int, int> > pairs;
 	int leftover = -1;
 	bool hasLeftover = false;
-	for (size_t i = 0; i < container.size(); i+=2){
+	for (size_t i = 0; i < container.size() - 1; i += 2){
 		int first = container[i];
 		int second = container[i + 1];
 		if (first < second) std::swap(first, second);
@@ -192,11 +218,12 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& container){
 
 void PmergeMe::sortVector(int ac, char **av){
 	std::vector<int> vec;
+	std::cout << "--- Sorting with Vector ---" << std::endl;
 	for (int i = 1; i < ac; ++i){
 		int val = std::atoi(av[i]);
 		if (val < 0)
 			throw std::runtime_error("Error: negative number");
-			vec.push_back(val);
+		vec.push_back(val);
 	}
 	printSeqV("Before: ", vec);
 
@@ -212,11 +239,12 @@ void PmergeMe::sortVector(int ac, char **av){
 
 void PmergeMe::sortDeque(int ac, char **av){
 	std::deque<int> deq;
+	std::cout << "--- Sorting with Deque ---" << std::endl;
 	for (int i = 1; i < ac; ++i){
 		int val = std::atoi(av[i]);
 		if (val < 0)
 			throw std::runtime_error("Error: negative number");
-			deq.push_back(val);
+		deq.push_back(val);
 	}
 	printSeqD("Before: ", deq);
 
@@ -226,5 +254,5 @@ void PmergeMe::sortDeque(int ac, char **av){
 
 	printSeqD("After: ", deq);
 	double time = static_cast<double>(end-start) / CLOCKS_PER_SEC * 1000000;
-	std::cout << "Time to process: " << deq.size() << " elements with std::vector: " << time << " us" << std::endl;
+	std::cout << "Time to process: " << deq.size() << " elements with std::deque: " << time << " us" << std::endl;
 }
