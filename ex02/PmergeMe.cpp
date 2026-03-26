@@ -6,7 +6,7 @@
 /*   By: tszymans <tszymans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 20:27:16 by tszymans          #+#    #+#             */
-/*   Updated: 2026/03/12 20:27:17 by tszymans         ###   ########.fr       */
+/*   Updated: 2026/03/26 17:40:57 by tszymans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ PmergeMe::PmergeMe(const PmergeMe& src) {*this = src;}
 //Copy Assignment Operator
 PmergeMe &PmergeMe::operator=(const PmergeMe& rhs) {
 	if (this != &rhs){
-		//If memeber variables added to class, should be copied here: 
+		//If memeber variables added to class, should be copied here:
 		//this->_myVector = src._myVector
 	}
 	return *this;
@@ -105,7 +105,7 @@ void PmergeMe::fordJohnsonVector(std::vector<int>& container){
 	int n = container.size();
 	if (n <= 1)
 		return;
-	
+
 	// 1. Pairing
 	std::vector<std::pair<int, int> > pairs;
 	int leftover = -1;
@@ -166,7 +166,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& container){
 	int n = container.size();
 	if (n <= 1)
 		return;
-	
+
 	// 1. Pairing
 	std::deque<std::pair<int, int> > pairs;
 	int leftover = -1;
@@ -200,7 +200,7 @@ void PmergeMe::fordJohnsonDeque(std::deque<int>& container){
 	std::deque<int> jacob = genJacobD(pend.size());
 	std::deque<bool> inserted(pend.size(), false);
 	inserted[0] = true;
-	for (size_t i = 1; i < jacob.size(); ++i){
+	for (size_t i = 0; i < jacob.size(); ++i){
 		int targetIdx = std::min(jacob[i], (int)pend.size() - 1);
 		for (int j = targetIdx; j > 0 && !inserted[j]; --j){		// why &&!inserted[j], and in jacobGenV not?
 			std::deque<int>::iterator it = std::lower_bound(mainChain.begin(), mainChain.end(), pend[j]);
