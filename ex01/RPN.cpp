@@ -6,7 +6,7 @@
 /*   By: tszymans <tszymans@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 20:26:52 by tszymans          #+#    #+#             */
-/*   Updated: 2026/03/12 20:26:53 by tszymans         ###   ########.fr       */
+/*   Updated: 2026/03/26 17:29:00 by tszymans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void RPN::evaluate(std::string expr){
 			if (c == '/') {
 				if (b == 0){
 					std::cerr << "Error: Division by zero" << std::endl;
-					return; 
+					return;
 				}
 				s.push(a / b);
 			}
@@ -51,7 +51,9 @@ void RPN::evaluate(std::string expr){
 			return;
 		}
 	}
-	if (s.size() != 1)
+	if (s.size() != 1){
 		std::cerr << "Error: incorrect number of operands" << std::endl;
-	std::cout << s.top() << std::endl; 
+		return;
+	}
+	std::cout << s.top() << std::endl;
 }
